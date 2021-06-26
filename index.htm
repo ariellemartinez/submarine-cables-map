@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Submarine cables | World101</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script> 
+<script src="landing-points.js"></script> 
+<script src="cables.js"></script>
+<style>
+#map {
+    height: 100%;
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+
+var map = L.map("map").setView([0, 0], 2);
+
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: "Imagery © <a href='https://www.openstreetmap.org/copyright' target='_blank'>OpenStreetMap contributors</a>, Data &copy; <a href='https://github.com/telegeography/www.submarinecablemap.com' target='_blank'>Telegeography</a>",
+}).addTo(map);
+
+var cables = L.geoJson(cablesData, {
+  style: {
+    "color": "#04284a",
+    "weight": 2,
+    "opacity": 0.7
+  }
+}).addTo(map);
+var landingPoints = L.geoJson(landingPointsData, {
+  pointToLayer: function (feature, latlng) {
+    return L.circleMarker(latlng, {
+      radius: 5,
+      fillColor: "#04284a",
+      fillOpacity: 0.9,
+      color: "#fff",
+      weight: 1,
+      opacity: 1
+    });
+  }
+}).addTo(map);
+landingPoints.eachLayer(function (layer) {
+  layer.bindPopup("<h4>Landing point name</h4><p>" + layer.feature.properties.name + "</p>");
+});
+
+</script>
+</body>
+</html>
